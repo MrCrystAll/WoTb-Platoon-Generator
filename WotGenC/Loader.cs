@@ -73,6 +73,7 @@ namespace WotGenC
             if (stream is null) return false;
             
             ListOfTanks list = tanks;
+            list.Clear();
             
             using (StreamReader reader = new StreamReader(stream))
             {

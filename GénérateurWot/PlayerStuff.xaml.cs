@@ -39,7 +39,18 @@ namespace GénérateurWot
         private void OnPlayerChanged(object sender, PropertyChangedEventArgs e)
         {
             Stats.Visibility = Visibility.Visible;
-            Tank.Text = Joueur.Current?.Nom;
+            
+            if(Joueur.Current is null)
+            {
+                Tank.Text = string.Empty;
+                TankPicture.Source = null;
+            }
+            else
+            {
+                Tank.Text = Joueur.Current.Nom;
+                TankPicture.Source = new BitmapImage(new Uri(Joueur.Current.Image, UriKind.Absolute));
+            }
+
             Challenge.Text = Joueur.Challenge is null 
                 ? string.Empty 
                 : Joueur.Challenge.Intitule;
@@ -80,31 +91,8 @@ namespace GénérateurWot
         public void ModifySelf()
         {
             BrushConverter conv = new BrushConverter();
-            Random r = new Random();
-            
+
             Timers.Items.Refresh();
-
-            int rd1 = (int)Joueur.Current.Type;
-
-            switch (rd1)
-            {
-                case 0:
-                    Tank.Foreground = (Brush)conv.ConvertFromString("Black");
-                    Avis.Source = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "../../../img/sad.jpg")));
-                    break;
-                case 1:
-                    Tank.Foreground = (Brush)conv.ConvertFromString("Red");
-                    Avis.Source = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "../../../img/neutre.jpg")));
-                    break;
-                case 2:
-                    Tank.Foreground = (Brush)conv.ConvertFromString("LightBlue");
-                    Avis.Source = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "../../../img/bien.jpg")));
-                    break;
-                case 3:
-                    Tank.Foreground = (Brush)conv.ConvertFromString("Pink");
-                    Avis.Source = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "../../../img/op.jpg")));
-                    break;
-            }
 
             Miss.Text = Joueur.Mission.Intitule;
             Valid.Visibility = Joueur.Mission.GetType() != typeof(NoMission) ? Visibility.Visible : Visibility.Collapsed;
@@ -286,6 +274,13 @@ namespace GénérateurWot
             
             Dispatcher.Invoke(() => Actualize.IsEnabled = true);
             Dispatcher.Invoke(() => Actualize.Content = originalText);
+        }
+
+        private void AllTanks_OnClick(object sender, RoutedEventArgs e)
+        {
+            
+            var allTanks = new AllTanks(Joueur);
+            allTanks.Show();
         }
     }
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kSb7xugeZ2EwnwAj0VvyglJ8uIDEM4d9ciPhq3JXiNPw07haXzQbPVp2Zl8LhEZA/juVw6hNy08MgOSNeHhnNw==",
+  "dgSpecHash": "NtNIgClwTKs2118g9OnQREJbpSb+HdZ7pah2W8qLMTUibf7Pe2pspqnK0KxaQ8o+X5hiRvlik4pmXebZovVGjQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\msuch\\source\\repos\\WotGenC\\WotGenC.csproj",
+  "projectFilePath": "C:\\Users\\msuch\\OneDrive\\Documents\\GitHub\\WoTb-Platoon-Generator\\WotGenC\\WotGenC.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\msuch\\.nuget\\packages\\jetbrains.annotations\\2022.1.0\\jetbrains.annotations.2022.1.0.nupkg.sha512",
     "C:\\Users\\msuch\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",

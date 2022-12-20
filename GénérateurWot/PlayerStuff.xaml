@@ -16,13 +16,23 @@
     </UserControl.Resources>
     
     <Grid d:DataContext="{Binding Path=Joueur}">
-        <Button
-            x:Name="Actualize"
-            Click="Actualize_OnClick"
-            Content="Actualiser les chars" 
+        <WrapPanel
             VerticalAlignment="Top" 
-            HorizontalAlignment="Center" 
-            Padding="10,5"/>
+            HorizontalAlignment="Center" >
+            <Button
+                x:Name="Actualize"
+                Click="Actualize_OnClick"
+                Content="Actualiser les chars" 
+                Padding="10,5"
+                Margin="0,0,10,0"/>
+            <Button 
+                x:Name="AllTanks"
+                Click="AllTanks_OnClick"
+                Content="Tous les chars"
+                Margin="10,0,0,0"
+                Padding="10,5"/>
+        </WrapPanel>
+        
         <TextBlock
             VerticalAlignment="Top"
             HorizontalAlignment="Center"
@@ -34,23 +44,25 @@
                 Margin="0,10,0,0"
                 HorizontalAlignment="Center">
                 <Grid
-                    Margin="0,80,0,0">
+                    Margin="0,80,0,0"
+                    DataContext="{Binding Path=Current, UpdateSourceTrigger=PropertyChanged}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <TextBlock
                         x:Name="Tank"
-
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         TextAlignment="Center"
                         TextWrapping="Wrap"
-                        Text="{Binding Path=Current.Nom}"/>
-                    <Image
-                        x:Name="Avis"
+                        Text="{Binding Path=Nom}"/>
+                    <Image 
                         Grid.Column="1"
-                        Height="50" />
+                        x:Name="TankPicture"
+                        Source="{Binding Path=Image}"
+                        Width="80"
+                        Height="80"/>
                 </Grid>
                 <Button x:Name="Stats" Margin="0,30" Click="Stats_OnClick" Visibility="Collapsed" Content="See stats in this tank" />
                 <TextBlock

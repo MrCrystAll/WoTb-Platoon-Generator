@@ -65,9 +65,9 @@
             <Grid HorizontalAlignment="Center" Width="820">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.1*"/>
-                    <ColumnDefinition Width="0.3*"/>
+                    <ColumnDefinition Width="0.4*"/>
                     <ColumnDefinition Width="0.2*"/>
-                    <ColumnDefinition Width="0.3*"/>
+                    <ColumnDefinition Width="0.4*"/>
                     <ColumnDefinition Width="0.1*"/>
                 </Grid.ColumnDefinitions>
                 <local:PlayerStuff Joueur="{Binding Path=Players[0]}" x:Name="J1"

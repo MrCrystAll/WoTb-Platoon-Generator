@@ -1,0 +1,80 @@
+﻿<Window x:Class="GénérateurWot.AllTanks"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:GénérateurWot"
+        xmlns:wotGenC="clr-namespace:WotGenC;assembly=WotGenC"
+        mc:Ignorable="d"
+        Title="AllTanks" Height="450" Width="800" d:DataContext="{d:DesignInstance wotGenC:Player}">
+    
+    <Window.Background>
+        <StaticResource ResourceKey="Background"/>
+    </Window.Background>
+    
+    <StackPanel>
+        <TextBlock HorizontalAlignment="Center" Margin="0,30,0,30">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}Tous les tanks de {0}">
+                    <Binding Path="Pseudo"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        
+        <Grid Height="300" Margin="10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <ListBox ScrollViewer.VerticalScrollBarVisibility="Hidden"  ItemsSource="{Binding Tanks}" x:Name="ListOfTanks" Background="{x:Null}" MaxHeight="300">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} | {1}">
+                                                <Binding Path="Te"/>
+                                                <Binding Path="Nom"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+                                <Image Source="{Binding Image}" Width="50" Height="50" HorizontalAlignment="Right"/>
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <TextBlock Text="No results found" TextAlignment="Center" x:Name="NoResults"/>
+            </StackPanel>
+            
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Tier checkboxes -->
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="Tiers :" Margin="0,0,0,10"/>
+                    <CheckBox Content="VII" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
+                    <CheckBox Content="VIII" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
+                    <CheckBox Content="IX" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
+                    <CheckBox Content="X" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
+                </StackPanel>
+                
+                <!-- Tier checkboxes -->
+                <StackPanel Grid.Column="1" HorizontalAlignment="Left">
+                    <TextBlock Text="Types :" Margin="0,0,0,10"/>
+                    <CheckBox Content="Light" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
+                    <CheckBox Content="Medium" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
+                    <CheckBox Content="Heavy" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
+                    <CheckBox Content="TD" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
+                </StackPanel>
+                
+            </Grid>
+        </Grid>
+    </StackPanel>
+</Window>
