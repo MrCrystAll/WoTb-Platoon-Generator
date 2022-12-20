@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
@@ -13,11 +15,11 @@ using WotGenC;
 
 namespace GénérateurWot
 {
-    public partial class StatsWindow : Window, INotifyPropertyChanged
+    public sealed partial class StatsWindow : Window, INotifyPropertyChanged
     {
         public Player CurrentPlayer { get; }
 
-        public Dictionary<Tank, int> ListTanksKilled { get; } = new Dictionary<Tank, int>();
+        public Dictionary<Tank, uint> ListTanksKilled { get; } = new Dictionary<Tank, uint>();
 
         public StatsWindow()
         {
@@ -41,24 +43,68 @@ namespace GénérateurWot
                 JObject json = JObject.Parse(text);
 
                 JToken playerTank = json["data"][CurrentPlayer.Id][0];
+                
+                JObject frags = (JObject)playerTank["frags"];
+                using var enumerator = frags.GetEnumerator();
+                enumerator.MoveNext();
+
+                string[] ids = new string[frags.Count];
+                
+                for (int i = 0; i < frags.Count; i++)
+                {
+                    ids[i] = enumerator.Current.Key;
+                    enumerator.MoveNext();
+                }
+
+                var tanks = Loader.FindTanksById(ids);
+
+                for (int i = 0; i < frags.Count; i++)
+                {
+                    Debug.WriteLine(tanks[i].Nom);
+                    ListTanksKilled.Add(tanks[i], (uint)frags[ids[i]]);
+                }
+
+                var list = ListTanksKilled.ToList();
+                list.Sort((x,y) => -x.Value.CompareTo(y.Value));
+                ListTanksKilled = list.ToDictionary(x => x.Key, x => x.Value);
+                
+                OnPropertyChanged(nameof(ListTanksKilled));
+                KilledTanks.ItemsSource = ListTanksKilled;
+
+                Stats s = new Stats(
+                    spotted: (float)playerTank["all"]["spotted"],
+                    hits: (float)playerTank["all"]["hits"],
+                    frags: (float)playerTank["all"]["frags"],
+                    numberOfBattles: (float)playerTank["all"]["battles"],
+                    wins: (float)playerTank["all"]["wins"],
+                    losses: (float)playerTank["all"]["losses"],
+                    maxXp1B: (float)playerTank["all"]["max_xp"],
+                    totalDmgDlt: (float)playerTank["all"]["damage_dealt"],
+                    totalDmgRecvd: (float)playerTank["all"]["damage_received"],
+                    maxFrags1B: (float)playerTank["all"]["max_frags"],
+                    totalShots: (float)playerTank["all"]["shots"],
+                    xp: (float)playerTank["all"]["xp"],
+                    winAndSurvived: (float)playerTank["all"]["win_and_survived"],
+                    survivedBattles: (float)playerTank["all"]["survived_battles"],
+                    droppedCapturePoints: (float)playerTank["all"]["dropped_capture_points"],
+                    killedTanks: ListTanksKilled
+                );
 
                 //Misc infos
-                Spotted.Text += NumberFormatter.Format_To_Underscore((float)playerTank["all"]["spotted"]);
-                Hits.Text += NumberFormatter.Format_To_Underscore((float)playerTank["all"]["hits"]);
-                Frags.Text += NumberFormatter.Format_To_Underscore((float)playerTank["all"]["frags"]);
+                Spotted.Text += NumberFormatter.Format_To_Space(s.Spotted);
+                Hits.Text += NumberFormatter.Format_To_Space(s.Hits);
+                Frags.Text += NumberFormatter.Format_To_Space(s.Frags);
+                LightKillRate.Text += $"{Math.Round(s.LightKillRate * 100,2).ToString(CultureInfo.CurrentCulture)}% ({s.NbLightsKilled})";
+                MedKillRate.Text += $"{Math.Round(s.MediumKillRate * 100,2).ToString(CultureInfo.CurrentCulture)}% ({s.NbMedsKilled})";
+                HeavyKillRate.Text += $"{Math.Round(s.HeavyKillRate * 100,2).ToString(CultureInfo.CurrentCulture)}% ({s.NbHeaviesKilled})";
+                TdKillRate.Text += $"{Math.Round(s.TdKillRate * 100,2).ToString(CultureInfo.CurrentCulture)}% ({s.NbTdsKilled})";
 
-                float numberOfBattles = (float)playerTank["all"]["battles"];
-                float wins = (float)playerTank["all"]["wins"];
-                float loss = (float)playerTank["all"]["losses"];
+                NumberOfBattles.Text += NumberFormatter.Format_To_Space(s.NumberOfBattles);
+                Wins.Text += NumberFormatter.Format_To_Space(s.Wins);
+                Losses.Text += NumberFormatter.Format_To_Space(s.Losses);
+                Draws.Text += NumberFormatter.Format_To_Space(s.Draws);
 
-                float draw = numberOfBattles - (wins + loss);
-
-                NumberOfBattles.Text += NumberFormatter.Format_To_Underscore(numberOfBattles);
-                Wins.Text += NumberFormatter.Format_To_Underscore(wins);
-                Losses.Text += NumberFormatter.Format_To_Underscore(loss);
-                Draws.Text += NumberFormatter.Format_To_Underscore(draw);
-
-                float winrate = (float)Math.Round(wins * 100 / numberOfBattles,2);
+                float winrate = s.WinRate * 100;
 
                 if (winrate < 50)
                 {
@@ -77,51 +123,28 @@ namespace GénérateurWot
                     WinRate.Foreground = new SolidColorBrush(Colors.MediumPurple);
                 }
 
-                WinRate.Text += $"{winrate}%";
+                WinRate.Text += $"{Math.Round(winrate,2)}%";
 
-                MaxXPOneBattle.Text += NumberFormatter.Format_To_Underscore((float)playerTank["all"]["max_xp"]);
-                TotalDamageDealt.Text += NumberFormatter.Format_To_Underscore((float)playerTank["all"]["damage_dealt"]);
-                TotalDamageReceived.Text += NumberFormatter.Format_To_Underscore((float)playerTank["all"]["damage_received"]);
+                MaxXPOneBattle.Text += NumberFormatter.Format_To_Space(s.MaxXp1B);
+                TotalDamageDealt.Text += NumberFormatter.Format_To_Space(s.TotalDmgDlt);
+                TotalDamageReceived.Text += NumberFormatter.Format_To_Space(s.TotalDmgRecvd);
 
-                MaximumFragsOneBattle.Text += (string)playerTank["all"]["max_frags"];
-                ShotsTotal.Text += NumberFormatter.Format_To_Underscore((float)playerTank["all"]["shots"]);
-                xp.Text += NumberFormatter.Format_To_Underscore((float)playerTank["all"]["xp"]);
+                MaximumFragsOneBattle.Text += s.MaxFrags1B.ToString(CultureInfo.CurrentCulture);
+                ShotsTotal.Text += NumberFormatter.Format_To_Space(s.TotalShots);
+                xp.Text += NumberFormatter.Format_To_Space(s.Xp);
 
-                float survivalWinRate = (float)Math.Round((float)playerTank["all"]["win_and_survived"] / wins * 100,2);
-                float survivalRate = (float)Math.Round((float)playerTank["all"]["survived_battles"] / numberOfBattles * 100,2);
+                float survivalWinRate = (float)Math.Round(s.SurvivalWinRate * 100,2);
+                float survivalRate = (float)Math.Round(s.SurvivalRate * 100,2);
 
                 SurvivalWinRate.Text += survivalWinRate.ToString("F2") + "%";
                 SurvivalRate.Text += survivalRate.ToString("F2") + "%";
-                
-                JObject frags = (JObject)playerTank["frags"];
-                using var enumerator = frags.GetEnumerator();
-                enumerator.MoveNext();
-
-                string[] ids = new string[frags.Count];
-                
-                for (int i = 0; i < frags.Count; i++)
-                {
-                    ids[i] = enumerator.Current.Key;
-                    enumerator.MoveNext();
-                }
-
-                var tanks = Loader.FindTanksById(ids);
-
-                for (int i = 0; i < frags.Count; i++)
-                {
-                    ListTanksKilled.Add(tanks[i], (int)frags[ids[i]]);
-                }
-
-                
-                OnPropertyChanged(nameof(ListTanksKilled));
-                KilledTanks.ItemsSource = ListTanksKilled;
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

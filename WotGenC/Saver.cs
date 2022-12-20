@@ -10,11 +10,10 @@ using Newtonsoft.Json;
 
 namespace WotGenC
 {
-    public class Saver
+    public static class Saver
     {
         public static void SaveBackup(string path, ListOfTanks content)
         {
-            Debug.WriteLine(content.Count);
             if (File.Exists(path))
             {
                 File.Delete(path);

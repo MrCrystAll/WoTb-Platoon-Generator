@@ -43,5 +43,36 @@ namespace WotGenC
             
             return string.Concat(result);
         }
+        
+        public static string Format_To_Space(float number)
+        {
+            bool negative = number < 0;
+            string numbString = Math.Abs(number).ToString("F0");
+            List<string> separatedByComma = numbString.Split(",").ToList();
+            List<string> result = separatedByComma[0].Select(digit => digit.ToString()).ToList();
+
+            int cpt = 0;
+            for (int i = result.Count - 1; i > 0; i--)
+            {
+                cpt++;
+                if (cpt % 3 == 0)
+                {
+                    result.Insert(i," ");
+                }
+
+            
+            }
+
+            if(negative)
+            {
+                result.Insert(0,"-"); 
+            }
+
+            //result.Add(",");
+            if(separatedByComma.Count > 1)
+                result.Add(separatedByComma[1]);
+            
+            return string.Concat(result);
+        }
     }
 }
