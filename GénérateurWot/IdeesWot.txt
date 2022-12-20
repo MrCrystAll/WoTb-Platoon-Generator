@@ -1,0 +1,31 @@
+---------------------------------Idées------------------------------
+
+Challenge spéciaux pour chaque mode de jeu (Les challenge du mode de jeu standard seront disponible ou non pour les autres modes de jeu):
+	Standard :
+		=> Reverse Binding										OK
+		=> Tourelle bloquée										OK
+		=> Immobilité											OK
+		=> Interdit de zoomer										OK
+		=> Full zoom											OK
+		=> Pseudo Réaliste										OK
+		=> Un shot sur 2										OK
+		=> Marche arrière										OK
+
+	Mad games :
+		=> Interdiction d'utiliser le pouvoir								OK
+		=> Utiliser le pouvoir dès que possible								OK
+
+	Uprising : 
+		=> Interdiction de prendre le pouvoir à 400 élixirs						KO (crée mais pas dans le pool)
+		=> Interdiction de prendre des pouvoirs pour la deuxième vie (Ca me parait pas ouf)		KO
+		=> Interdiction de tirer un inferno sur un ennemi (Possibilité de le tirer à coté)		KO
+
+	Big boss :
+		
+	Réaliste :
+
+	Gravity :
+
+--------------------------Ce que je dois faire----------------------
+
+

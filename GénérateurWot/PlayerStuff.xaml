@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="GénérateurWot.PlayerStuff"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:GénérateurWot"
+             xmlns:wotGenC="clr-namespace:WotGenC;assembly=WotGenC"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance local:PlayerStuff}">
+    
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{x:Null}" />
+            <Setter Property="FontFamily" Value="century gothic" />
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid d:DataContext="{Binding Path=Joueur}">
+        <Button
+            x:Name="Actualize"
+            Click="Actualize_OnClick"
+            Content="Actualiser les chars" 
+            VerticalAlignment="Top" 
+            HorizontalAlignment="Center" 
+            Padding="10,5"/>
+        <TextBlock
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Text="{Binding Pseudo}" 
+            Margin="0,40,0,0"
+            x:Name="Pseudo"/>
+        <StackPanel
+                Width="200"
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center">
+                <Grid
+                    Margin="0,80,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        x:Name="Tank"
+
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap"
+                        Text="{Binding Path=Current.Nom}"/>
+                    <Image
+                        x:Name="Avis"
+                        Grid.Column="1"
+                        Height="50" />
+                </Grid>
+                <Button x:Name="Stats" Margin="0,30" Click="Stats_OnClick" Visibility="Collapsed" Content="See stats in this tank" />
+                <TextBlock
+                    x:Name="Miss"
+                    HorizontalAlignment="Center"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap" 
+                    Text="{Binding Path=Mission.Intitule}"/>
+                <WrapPanel
+                    x:Name="Valid"
+                    Margin="0,10,0,0"
+                    HorizontalAlignment="Center"
+                    Visibility="Collapsed">
+                    <RadioButton
+                        x:Name="Validé"
+                        Margin="0,0,10,0"
+                        Content="Validée" />
+                    <RadioButton
+                        x:Name="Raté"
+                        Content="Ratée" />
+                </WrapPanel>
+                <Button
+                    x:Name="Bconfirm"
+                    Margin="0,10,0,0"
+                    HorizontalAlignment="Center"
+                    Click="Confirmation_Click"
+                    Content="Confirmer"
+                    Visibility="Collapsed" />
+
+                <StackPanel Margin="0,20,0,0">
+                    <ListBox HorizontalAlignment="Center" ItemsSource="{Binding Path=Timers.Timers, UpdateSourceTrigger=PropertyChanged}" x:Name="Timers" Visibility="Collapsed" Background="{x:Null}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <WrapPanel HorizontalAlignment="Center">
+                                    <TextBlock d:DataContext="{d:DesignInstance wotGenC:Timer}" Foreground="Black" TextAlignment="Center">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0}:{1:D2}" UpdateSourceTrigger="PropertyChanged">
+                                                <Binding Path="Minutes" />
+                                                <Binding Path="Seconds" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </WrapPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+                <TextBlock Margin="0,10,0,0" x:Name="Challenge" Text="{Binding Challenge.Intitule, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="200"/>
+                <TextBlock x:Name="Penalite" Margin="0,10,0,0" Text="{Binding Penalite.Intitule, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="200"/>
+                <TextBlock x:Name="PenaliteSupp" Margin="0,10,0,0" Text="{Binding PenaliteSupp.Intitule, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="200"/>
+            </StackPanel>
+    </Grid>
+</UserControl>

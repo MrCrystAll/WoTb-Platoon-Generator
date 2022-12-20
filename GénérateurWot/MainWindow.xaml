@@ -1,0 +1,92 @@
+<Window
+    x:Class="GénérateurWot.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:GénérateurWot"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Génération"
+    Width="900"
+    Height="700"
+    Loaded="Window_Loaded"
+    ResizeMode="CanMinimize"
+    mc:Ignorable="d">
+    
+    <Window.Background>
+        <StaticResource ResourceKey="Background"/>
+    </Window.Background>
+
+    <StackPanel Width="800" HorizontalAlignment="Center" d:DataContext="{d:DesignInstance local:MainWindow }">
+        <Grid Height="100" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.2*"/>
+                <ColumnDefinition Width="0.2*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.2*"/>
+                <ColumnDefinition Width="0.2*"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Paramètres" VerticalAlignment="Top" x:Name="Parameters" Click="Parameters_OnClick" Height="40"/>
+            <StackPanel Grid.Column="2">
+                <Button
+                    HorizontalAlignment="Center"
+                    Click="Button_Click"
+                    Padding="10,0"
+                    Content="Générer un peloton aléatoire"
+                    Height="40"/>
+                <TextBlock Margin="0,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="Current mode : {0}">
+                            <Binding Path="CurrentMode"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock x:Name="Tier" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,0">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}Tier {0}">
+                            <Binding Path="CurrentTier"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </StackPanel>
+            
+            <Button Grid.Row="0" Grid.Column="4"
+                    x:Name="Lock"
+                    VerticalAlignment="Top"
+                    Click="Tier_Change_Click"
+                    HorizontalAlignment="Stretch"
+                    Padding="10,0"
+                    Height="40"
+                    Content="Lock Tier" />
+
+        </Grid>
+        
+        
+        <StackPanel>
+            <Grid HorizontalAlignment="Center" Width="820">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.1*"/>
+                    <ColumnDefinition Width="0.3*"/>
+                    <ColumnDefinition Width="0.2*"/>
+                    <ColumnDefinition Width="0.3*"/>
+                    <ColumnDefinition Width="0.1*"/>
+                </Grid.ColumnDefinitions>
+                <local:PlayerStuff Joueur="{Binding Path=Players[0]}" x:Name="J1"
+                                   d:DataContext="{d:DesignInstance local:MainWindow}" Grid.Column="1">
+                </local:PlayerStuff>
+                <local:PlayerStuff Joueur="{Binding Path=Players[1]}" x:Name="J2"
+                                   d:DataContext="{d:DesignInstance local:MainWindow}" Grid.Column="3">
+                </local:PlayerStuff>
+            </Grid>
+            <!--<TextBlock
+                Margin="0,50,0,0"
+                x:Name="Challenge"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />-->
+            <Button Content="Démarrer les timers" Visibility="Collapsed" Click="Start_Timers_OnClick" x:Name="StartTimers" HorizontalAlignment="Center"/>
+            <WrapPanel HorizontalAlignment="Center" x:Name="PauseRestart" Visibility="Collapsed">
+                <Button Content="Pause" x:Name="Pause" Margin="0,0,10,0" Padding="10" Click="Pause_OnClick"/>
+                <Button Content="Restart" Margin="10,0,0,0" Padding="10" Click="Restart_OnClick"/>
+            </WrapPanel>
+        </StackPanel>
+    </StackPanel>
+</Window>
