@@ -1,0 +1,21 @@
+﻿<Application x:Class="GénérateurWot.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:GénérateurWot"
+             StartupUri="MainWindow.xaml"
+             Exit="App_OnExit">
+    <Application.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{x:Null}" />
+            <Setter Property="FontFamily" Value="century gothic" />
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="century gothic" />
+        </Style>
+        <LinearGradientBrush x:Key="Background">
+            <GradientStop Color="Green" x:Name="GradientStop1"/>
+            <GradientStop Offset="1" Color="LightGreen" x:Name="GradientStop2" />
+        </LinearGradientBrush>
+        
+    </Application.Resources>
+</Application>

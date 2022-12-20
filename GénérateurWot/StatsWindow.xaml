@@ -1,0 +1,113 @@
+﻿<Window x:Class="GénérateurWot.StatsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:GénérateurWot"
+        mc:Ignorable="d"
+        Title="Stats" 
+        Width="800"
+        Height="450"
+        d:DataContext="{d:DesignInstance local:StatsWindow}">
+        
+            
+        <Window.Background>
+                <LinearGradientBrush>
+                        <GradientStop Color="Green" x:Name="GradientStop1"/>
+                        <GradientStop Offset="1" Color="LightGreen" x:Name="GradientStop2" />
+                </LinearGradientBrush>
+        </Window.Background>
+    
+        <Window.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                                <Storyboard>
+                                        <ColorAnimation
+                                                Storyboard.TargetName="GradientStop2"
+                                                Storyboard.TargetProperty="Color" From="Green" To="Black" Duration="0:0:15"
+                                                RepeatBehavior="Forever" AutoReverse="True"
+                                        />
+                                        <ColorAnimation
+                                                Storyboard.TargetName="GradientStop1"
+                                                Storyboard.TargetProperty="Color" From="Black" To="White" Duration="0:0:15"
+                                                RepeatBehavior="Forever" AutoReverse="True"
+                                        />
+                                </Storyboard>
+                        </BeginStoryboard>
+                </EventTrigger>
+        </Window.Triggers>
+        
+        <StackPanel>
+                <StackPanel.Resources>
+                        <Style TargetType="TextBlock" x:Key="MarginSetter">
+                                <Setter Property="Margin" Value="10,10"></Setter>
+                        </Style>
+                </StackPanel.Resources>
+                <TextBlock HorizontalAlignment="Center" Margin="0,30,0,0">
+                        <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} : Tier {1}"  d:DataContext="{Binding Path=CurrentPlayer}">
+                                        <Binding Path="Current.Nom"/>
+                                        <Binding Path="Current.Te"/>
+                                </MultiBinding>
+                        </TextBlock.Text>
+                </TextBlock>
+                <TextBlock Text="Waiting for server to answer" Margin="0,0,0,30" x:Name="State" HorizontalAlignment="Center"/>
+                <Grid>
+                        <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        
+                        <StackPanel Margin="10,0,0,0" HorizontalAlignment="Center"  >
+                                
+                                <TextBlock Text="Miscellaneous" FontWeight="Bold" Margin="0,0,0,10" TextAlignment="Center"></TextBlock>
+                
+                                <TextBlock x:Name="Spotted" Text="Ennemies spotted : " />
+                                <TextBlock x:Name="Hits" Text="Number of hits dealt : "/>
+                                <TextBlock x:Name="Frags" Text="Ennemies killed : "/>
+                                
+                                <Line X2="200" Stroke="Black" Margin="0,20"/>
+                                
+                                <ListBox ItemsSource="{Binding Path=ListTanksKilled, UpdateSourceTrigger=PropertyChanged}" x:Name="KilledTanks" Height="200">
+                                        <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                        <StackPanel>
+                                                                <local:TanksListKill Tank="{Binding Key}" NbKilled="{Binding Value}"/>
+                                                        </StackPanel>
+                                                </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                </ListBox>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center">
+                                <TextBlock Text="Battle summaries" FontWeight="Bold" Margin="0,0,0,10" TextAlignment="Center"/>
+                                
+                                <TextBlock x:Name="NumberOfBattles" Text="Number of battles : "/>
+                                <TextBlock x:Name="Wins" Text="Wins : " Margin="10,0,0,0"/>
+                                <TextBlock x:Name="Losses" Text="Losses : " Margin="10,0,0,0"/>
+                                <TextBlock x:Name="Draws" Text="Draws : " Margin="10,0,0,0"/>
+
+                                <TextBlock x:Name="WinRate" Text="Winrate : " Margin="30,20,0,0" FontSize="20" HorizontalAlignment="Center"/>
+                                
+                                <Line X1="0" X2="200" Y1="0" Y2="1" Stroke="Black" Margin="0, 20"/>
+                                <TextBlock x:Name="MaxXPOneBattle" Text="Maximum xp in one battle : " />
+                                <TextBlock x:Name="TotalDamageDealt" Text="Total damage dealt : " />
+                                <TextBlock x:Name="TotalDamageReceived" Text="Total damage received : " />
+                                <TextBlock x:Name="MaximumFragsOneBattle" Text="Max frags in one battle : " />
+                                <TextBlock x:Name="ShotsTotal" Text="Total number of shots : " />
+                                <TextBlock x:Name="xp" Text="XP (excluding gamemodes) : " />
+                                <TextBlock x:Name="SurvivalWinRate" Text="Survival win rate : " />
+                                <TextBlock x:Name="SurvivalRate" Text="Survival rate : " />
+
+                        </StackPanel>
+                </Grid>
+                
+        </StackPanel>
+        
+</Window>
