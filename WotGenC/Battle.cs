@@ -7,7 +7,7 @@ namespace WotGenC.Missions
     {
         public GameMode Mode;
         public bool Started { get; set; }
-        public TimeSpan Remaining_Time { get; set; }
+        public TimeSpan RemainingTime { get; set; }
         
         public System.Timers.Timer Clock { get; set; }
 
