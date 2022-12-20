@@ -1,0 +1,10 @@
+C:\Users\msuch\source\repos\WotGenC\bin\Debug\netcoreapp3.1\WotGenC.deps.json
+C:\Users\msuch\source\repos\WotGenC\bin\Debug\netcoreapp3.1\WotGenC.dll
+C:\Users\msuch\source\repos\WotGenC\bin\Debug\netcoreapp3.1\WotGenC.pdb
+C:\Users\msuch\source\repos\WotGenC\obj\Debug\netcoreapp3.1\WotGenC.AssemblyInfoInputs.cache
+C:\Users\msuch\source\repos\WotGenC\obj\Debug\netcoreapp3.1\WotGenC.AssemblyInfo.cs
+C:\Users\msuch\source\repos\WotGenC\obj\Debug\netcoreapp3.1\WotGenC.csproj.CoreCompileInputs.cache
+C:\Users\msuch\source\repos\WotGenC\obj\Debug\netcoreapp3.1\WotGenC.dll
+C:\Users\msuch\source\repos\WotGenC\obj\Debug\netcoreapp3.1\WotGenC.pdb
+C:\Users\msuch\source\repos\WotGenC\obj\Debug\netcoreapp3.1\WotGenC.csproj.AssemblyReference.cache
+C:\Users\msuch\source\repos\WotGenC\obj\Debug\netcoreapp3.1\WotGenC.GeneratedMSBuildEditorConfig.editorconfig
