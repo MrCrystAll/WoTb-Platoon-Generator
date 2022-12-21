@@ -71,11 +71,9 @@
                     <ColumnDefinition Width="0.1*"/>
                 </Grid.ColumnDefinitions>
                 <local:PlayerStuff Joueur="{Binding Path=Players[0]}" x:Name="J1"
-                                   d:DataContext="{d:DesignInstance local:MainWindow}" Grid.Column="1">
-                </local:PlayerStuff>
+                                   d:DataContext="{d:DesignInstance local:MainWindow}" Grid.Column="1" />
                 <local:PlayerStuff Joueur="{Binding Path=Players[1]}" x:Name="J2"
-                                   d:DataContext="{d:DesignInstance local:MainWindow}" Grid.Column="3">
-                </local:PlayerStuff>
+                                   d:DataContext="{d:DesignInstance local:MainWindow}" Grid.Column="3" />
             </Grid>
             <!--<TextBlock
                 Margin="0,50,0,0"

@@ -63,6 +63,10 @@
               "target": "Package",
               "version": "[13.0.1, )"
             },
+            "Plotly": {
+              "target": "Package",
+              "version": "[1.5.1, )"
+            },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.4, )"

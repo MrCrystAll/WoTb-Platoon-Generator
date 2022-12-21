@@ -7,17 +7,22 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Media;
 using GénérateurWot.Annotations;
-using Microsoft.Win32.SafeHandles;
 using Newtonsoft.Json.Linq;
 using WotGenC;
+
+
 
 namespace GénérateurWot
 {
     public sealed partial class StatsWindow : Window, INotifyPropertyChanged
     {
         public Player CurrentPlayer { get; }
+        
+        public Dictionary<string, float> Winrate { get; }
+        public Dictionary<string, float> RatioRate { get; }
 
         public Dictionary<Tank, uint> ListTanksKilled { get; } = new Dictionary<Tank, uint>();
 
@@ -29,7 +34,18 @@ namespace GénérateurWot
         {
             CurrentPlayer = joueur;
             DataContext = CurrentPlayer;
+            
+            Winrate = new Dictionary<string, float>
+            {
+                { CurrentPlayer.Tanks[2].Nom, 48.83f },
+                { CurrentPlayer.Tanks[4].Nom, 54.13f },
+                { CurrentPlayer.Tanks[5].Nom, 23.45f }
+            };
+
             InitializeComponent();
+            
+            
+            //((PieSeries)Chart.Series[1]).ItemsSource = RatioRate;
 
             KilledTanks.ItemsSource = ListTanksKilled;
 
@@ -47,6 +63,7 @@ namespace GénérateurWot
                 JObject frags = (JObject)playerTank["frags"];
                 using var enumerator = frags.GetEnumerator();
                 enumerator.MoveNext();
+
 
                 string[] ids = new string[frags.Count];
                 
@@ -89,15 +106,27 @@ namespace GénérateurWot
                     droppedCapturePoints: (float)playerTank["all"]["dropped_capture_points"],
                     killedTanks: ListTanksKilled
                 );
+                
+                RatioRate = new Dictionary<string, float>
+                {
+                    { CultureInfo.CurrentCulture.TextInfo.ToTitleCase(TankType.LIGHT.ToString("G").ToLower()), s.LightKillRate },
+                    { CultureInfo.CurrentCulture.TextInfo.ToTitleCase(TankType.MEDIUM.ToString("G").ToLower()), s.MediumKillRate },
+                    { CultureInfo.CurrentCulture.TextInfo.ToTitleCase(TankType.HEAVY.ToString("G").ToLower()), s.HeavyKillRate },
+                    { CultureInfo.CurrentCulture.TextInfo.ToTitleCase(TankType.TD.ToString("G").ToLower()), s.TdKillRate }
+                };
+                
+                ((PieSeries)Chart.Series[0]).ItemsSource = RatioRate;
 
                 //Misc infos
                 Spotted.Text += NumberFormatter.Format_To_Space(s.Spotted);
                 Hits.Text += NumberFormatter.Format_To_Space(s.Hits);
                 Frags.Text += NumberFormatter.Format_To_Space(s.Frags);
-                LightKillRate.Text += $"{Math.Round(s.LightKillRate * 100,2).ToString(CultureInfo.CurrentCulture)}% ({s.NbLightsKilled})";
+                RatioDltRecvd.Text += Math.Round(s.RatioDmgDltRecvd, 2);
+
+                /*LightKillRate.Text += $"{Math.Round(s.LightKillRate * 100,2).ToString(CultureInfo.CurrentCulture)}% ({s.NbLightsKilled})";
                 MedKillRate.Text += $"{Math.Round(s.MediumKillRate * 100,2).ToString(CultureInfo.CurrentCulture)}% ({s.NbMedsKilled})";
                 HeavyKillRate.Text += $"{Math.Round(s.HeavyKillRate * 100,2).ToString(CultureInfo.CurrentCulture)}% ({s.NbHeaviesKilled})";
-                TdKillRate.Text += $"{Math.Round(s.TdKillRate * 100,2).ToString(CultureInfo.CurrentCulture)}% ({s.NbTdsKilled})";
+                TdKillRate.Text += $"{Math.Round(s.TdKillRate * 100,2).ToString(CultureInfo.CurrentCulture)}% ({s.NbTdsKilled})";*/
 
                 NumberOfBattles.Text += NumberFormatter.Format_To_Space(s.NumberOfBattles);
                 Wins.Text += NumberFormatter.Format_To_Space(s.Wins);
@@ -128,7 +157,14 @@ namespace GénérateurWot
                 MaxXPOneBattle.Text += NumberFormatter.Format_To_Space(s.MaxXp1B);
                 TotalDamageDealt.Text += NumberFormatter.Format_To_Space(s.TotalDmgDlt);
                 TotalDamageReceived.Text += NumberFormatter.Format_To_Space(s.TotalDmgRecvd);
-
+                AverageSpots.Text += Math.Round(s.AvgSpotsPerGame,2);
+                AverageHits.Text += Math.Round(s.AvgHitsPerGame,2);
+                AverageFrags.Text += Math.Round(s.AvgFragsPerGame,2);
+                AverageShots.Text += Math.Round(s.AvgShotsPerGame,2);
+                AverageXp.Text += Math.Round(s.AvgXpPerGame, 2);
+                AverageDmgDlt.Text += Math.Round(s.AvgDmgDltPerGame, 2);
+                AverageDmgRecvd.Text += Math.Round(s.AvgDmgRecvdPerGame, 2);
+                
                 MaximumFragsOneBattle.Text += s.MaxFrags1B.ToString(CultureInfo.CurrentCulture);
                 ShotsTotal.Text += NumberFormatter.Format_To_Space(s.TotalShots);
                 xp.Text += NumberFormatter.Format_To_Space(s.Xp);

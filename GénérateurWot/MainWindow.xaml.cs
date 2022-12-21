@@ -93,6 +93,7 @@ namespace GénérateurWot
             Debug.WriteLine("Initializing components");
             InitializeComponent();
             
+            
             Debug.WriteLine("Assigning players");
             J1.Joueur = Players[0];
             J2.Joueur = Players[1];

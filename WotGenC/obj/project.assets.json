@@ -187,6 +187,9 @@
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
       },
+      "Plotly/1.5.1": {
+        "type": "package"
+      },
       "runtime.native.System.Data.SqlClient.sni/4.7.0": {
         "type": "package",
         "dependencies": {
@@ -745,6 +748,18 @@
         "packageIcon.png"
       ]
     },
+    "Plotly/1.5.1": {
+      "sha512": "Kjd3/QJk/UEvPzrZ+olDEPTKkY0WrLg67sC9vlPjGgKml7mSbZGQcniPDc9KrHZ9dgbUGXkhFxW8OuglwasvFg==",
+      "type": "package",
+      "path": "plotly/1.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/Scripts/Plotly/plotly.min.js",
+        "plotly.1.5.1.nupkg.sha512",
+        "plotly.nuspec"
+      ]
+    },
     "runtime.native.System.Data.SqlClient.sni/4.7.0": {
       "sha512": "9kyFSIdN3T0qjDQ2R0HRXYIhS3l5psBzQi6qqhdLz+SzFyEy4sVxNOke+yyYv8Cu8rPER12c3RDjLT8wF3WBYQ==",
       "type": "package",
@@ -1278,6 +1293,7 @@
       "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.3",
       "Microsoft.Toolkit.Uwp.Notifications >= 7.1.2",
       "Newtonsoft.Json >= 13.0.1",
+      "Plotly >= 1.5.1",
       "System.Data.SqlClient >= 4.8.4"
     ]
   },
@@ -1343,6 +1359,10 @@
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[13.0.1, )"
+          },
+          "Plotly": {
+            "target": "Package",
+            "version": "[1.5.1, )"
           },
           "System.Data.SqlClient": {
             "target": "Package",

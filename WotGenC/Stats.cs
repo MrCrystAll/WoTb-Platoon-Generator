@@ -30,6 +30,12 @@ namespace WotGenC
         public float AvgSpotsPerGame => Spotted / NumberOfBattles;
         public float AvgHitsPerGame => Hits / NumberOfBattles;
         public float AvgFragsPerGame => Frags / NumberOfBattles;
+        public float AvgDmgDltPerGame => TotalDmgDlt / NumberOfBattles;
+        public float AvgDmgRecvdPerGame => TotalDmgRecvd / NumberOfBattles;
+        public float RatioDmgDltRecvd => AvgDmgDltPerGame / AvgDmgRecvdPerGame;
+        public float AvgXpPerGame => Xp / NumberOfBattles;
+        public float AvgShotsPerGame => TotalShots / NumberOfBattles;
+        
         public float SurvivalRate => SurvivedBattles / NumberOfBattles;
         public float SurvivalWinRate => WinAndSurvived / NumberOfBattles;
 
