@@ -18,10 +18,6 @@
         <StaticResource ResourceKey="Background" />
     </Window.Background>
 
-    <Window.Resources>
-        <conv:BoolToImageFiltersConverter x:Key="FiltersConverter" />
-    </Window.Resources>
-
     <StackPanel>
         <StackPanel.Resources>
             <Style TargetType="TextBlock" x:Key="MarginSetter">
