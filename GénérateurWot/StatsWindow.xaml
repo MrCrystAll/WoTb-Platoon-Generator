@@ -141,12 +141,6 @@
                            Margin="0,0,0,10" HorizontalAlignment="Center" Width="300" TextWrapping="Wrap"
                            TextAlignment="Center" />
 
-                <Button HorizontalAlignment="Left" Click="Filters_OnClick">
-                    <Image Source="{Binding Path=FiltersEnabled,
-                                Converter={StaticResource FiltersConverter}}"
-                                Width="20" Height="20" />
-                </Button>
-
                 <ListBox ItemsSource="{Binding Path=ListTanksKilled, UpdateSourceTrigger=PropertyChanged}"
                          x:Name="KilledTanks" MaxHeight="650" Width="300" Background="{x:Null}">
                     <ListBox.ItemTemplate>
