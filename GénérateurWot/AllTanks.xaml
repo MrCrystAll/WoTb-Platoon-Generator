@@ -4,75 +4,101 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:wotGenC="clr-namespace:WotGenC;assembly=WotGenC"
+        xmlns:local="clr-namespace:GénérateurWot"
         mc:Ignorable="d"
         Title="AllTanks" Height="450" Width="800" d:DataContext="{d:DesignInstance wotGenC:Player}">
-    
+
     <Window.Background>
-        <StaticResource ResourceKey="Background"/>
+        <StaticResource ResourceKey="Background" />
     </Window.Background>
-    
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:AllTanks.ViewStats}" CanExecute="Stats_OnCanExecute"
+                        Executed="Stats_OnExecuted" />
+    </Window.CommandBindings>
+
     <StackPanel>
         <TextBlock HorizontalAlignment="Center" Margin="0,30,0,30">
             <TextBlock.Text>
                 <MultiBinding StringFormat="{}Tous les tanks de {0}">
-                    <Binding Path="Pseudo"/>
+                    <Binding Path="Pseudo" />
                 </MultiBinding>
             </TextBlock.Text>
         </TextBlock>
-        
+
         <Grid Height="300" Margin="10,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            
+
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <ListBox ScrollViewer.VerticalScrollBarVisibility="Hidden"  ItemsSource="{Binding Tanks}" x:Name="ListOfTanks" Background="{x:Null}" MaxHeight="300">
+                <ListBox ScrollViewer.VerticalScrollBarVisibility="Hidden" ItemsSource="{Binding Tanks}"
+                         x:Name="ListOfTanks" Background="{x:Null}" MaxHeight="300" HorizontalContentAlignment="Stretch">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <WrapPanel>
-                                <StackPanel VerticalAlignment="Center">
-                                    <TextBlock>
-                                        <TextBlock.Text>
-                                            <MultiBinding StringFormat="{}{0} | {1}">
-                                                <Binding Path="Te"/>
-                                                <Binding Path="Nom"/>
-                                            </MultiBinding>
-                                        </TextBlock.Text>
-                                    </TextBlock>
-                                </StackPanel>
-                                <Image Source="{Binding Image}" Width="50" Height="50" HorizontalAlignment="Right"/>
-                            </WrapPanel>
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.3*" />
+                                    <ColumnDefinition Width="0.2*" />
+                                    <ColumnDefinition Width="0.5*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} | {1}">
+                                            <Binding Path="Te" />
+                                            <Binding Path="Nom" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <Image Grid.Column="1" Source="{Binding Image}" Width="50" Height="50"
+                                       HorizontalAlignment="Right" />
+                                <Button Grid.Column="2" Content="View all stats"
+                                        Command="{x:Static local:AllTanks.ViewStats}" Height="20"
+                                        HorizontalAlignment="Right" CommandParameter="{Binding}" />
+                            </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <TextBlock Text="No results found" TextAlignment="Center" x:Name="NoResults"/>
+                <TextBlock Text="No results found" TextAlignment="Center" x:Name="NoResults" />
             </StackPanel>
-            
+
             <Grid VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                
+
                 <!-- Tier checkboxes -->
                 <StackPanel HorizontalAlignment="Center">
-                    <TextBlock Text="Tiers :" Margin="0,0,0,10"/>
-                    <CheckBox Content="VII" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
-                    <CheckBox Content="VIII" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
-                    <CheckBox Content="IX" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
-                    <CheckBox Content="X" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
+                    <TextBlock Text="Tiers :" Margin="0,0,0,10" />
+                    <CheckBox Content="V" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                              Margin="0,0,0,10" />
+                    <CheckBox Content="VI" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                              Margin="0,0,0,10" />
+                    <CheckBox Content="VII" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                              Margin="0,0,0,10" />
+                    <CheckBox Content="VIII" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                              Margin="0,0,0,10" />
+                    <CheckBox Content="IX" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                              Margin="0,0,0,10" />
+                    <CheckBox Content="X" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                              Margin="0,0,0,10" />
                 </StackPanel>
-                
+
                 <!-- Tier checkboxes -->
                 <StackPanel Grid.Column="1" HorizontalAlignment="Left">
-                    <TextBlock Text="Types :" Margin="0,0,0,10"/>
-                    <CheckBox Content="Light" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
-                    <CheckBox Content="Medium" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
-                    <CheckBox Content="Heavy" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
-                    <CheckBox Content="TD" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed" Margin="0,0,0,10"/>
+                    <TextBlock Text="Types :" Margin="0,0,0,10" />
+                    <CheckBox Content="Light" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                              Margin="0,0,0,10" />
+                    <CheckBox Content="Medium" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                              Margin="0,0,0,10" />
+                    <CheckBox Content="Heavy" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                              Margin="0,0,0,10" />
+                    <CheckBox Content="TD" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                              Margin="0,0,0,10" />
                 </StackPanel>
-                
+
             </Grid>
         </Grid>
     </StackPanel>
