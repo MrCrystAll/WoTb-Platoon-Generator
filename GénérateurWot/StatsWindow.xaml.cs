@@ -26,8 +26,6 @@ namespace GénérateurWot
         public Dictionary<string, float> Winrate { get; }
         public Dictionary<string, float> RatioRate { get; set; }
 
-        public bool FiltersEnabled { get; set; }
-
         public Tank Tank { get; }
 
         public bool FiltersEnabled { get; set; }
@@ -298,11 +296,6 @@ namespace GénérateurWot
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void Filters_OnClick(object sender, RoutedEventArgs e)
-        {
-            FiltersEnabled = !FiltersEnabled;
         }
     }
 }
