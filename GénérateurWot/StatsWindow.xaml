@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:GénérateurWot"
+        xmlns:conv="clr-namespace:GénérateurWot.Converters"
         xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:dvc="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=DotNetProjects.DataVisualization.Toolkit"
         mc:Ignorable="d"
@@ -16,6 +17,10 @@
     <Window.Background>
         <StaticResource ResourceKey="Background"/>
     </Window.Background>
+    
+    <Window.Resources>
+        <conv:BoolToImageFiltersConverter x:Key="FiltersConverter"></conv:BoolToImageFiltersConverter>
+    </Window.Resources>
 
     <StackPanel>
         <StackPanel.Resources>
@@ -121,6 +126,12 @@
             <StackPanel Grid.Column="3">
                 <TextBlock Text="List of all the tanks killed sorted by the number of kills (descending)" Margin="0,0,0,10" HorizontalAlignment="Center" Width="300" TextWrapping="Wrap" TextAlignment="Center"/>
 
+                <Button HorizontalAlignment="Left" Click="Filters_OnClick">
+                    <Image Source="{Binding Path=FiltersEnabled,
+                                Converter={StaticResource FiltersConverter}}"
+                           Width="20" Height="20" />
+                </Button>
+                
                 <ListBox ItemsSource="{Binding Path=ListTanksKilled, UpdateSourceTrigger=PropertyChanged}"
                          x:Name="KilledTanks" MaxHeight="650" Width="300" Background="{x:Null}">
                     <ListBox.ItemTemplate>
