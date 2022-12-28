@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,7 +14,7 @@ namespace GénérateurWot
     {
         public static readonly RoutedCommand ViewStats = new RoutedCommand("Stats", typeof(Button));
         
-        private readonly bool[] _tiersSorting = new bool[6];
+        public ObservableCollection<bool> TiersSorting { get; set; } = new ObservableCollection<bool>();
         private readonly bool[] _typesSorting = new bool[4];
         
         public static readonly DependencyProperty PlayerProperty = DependencyProperty.Register(
@@ -26,11 +28,19 @@ namespace GénérateurWot
         
         public AllTanks()
         {
+            for (int i = 0; i < 6; i++)
+            {
+                TiersSorting.Add(false);
+            }
             InitializeComponent();
         }
 
         public AllTanks(Player p)
         {
+            for (int i = 0; i < 6; i++)
+            {
+                TiersSorting.Add(false);
+            }
             Player = p;
             DataContext = p;
             InitializeComponent();
@@ -38,25 +48,25 @@ namespace GénérateurWot
 
         private void Filter_Changed(object sender, RoutedEventArgs e)
         {
-            switch ((sender as CheckBox)!.Content)
+            /*switch ((sender as CheckBox)!.Content)
             {
                 case "V":
-                    _tiersSorting[0] = !_tiersSorting[0];
+                    TiersSorting[0] = !TiersSorting[0];
                     break;
                 case "VI":
-                    _tiersSorting[1] = !_tiersSorting[1];
+                    TiersSorting[1] = !TiersSorting[1];
                     break;
                 case "VII":
-                    _tiersSorting[2] = !_tiersSorting[2];
+                    TiersSorting[2] = !TiersSorting[2];
                     break;
                 case "VIII":
-                    _tiersSorting[3] = !_tiersSorting[3];
+                    TiersSorting[3] = !TiersSorting[3];
                     break;
                 case "IX":
-                    _tiersSorting[4] = !_tiersSorting[4];
+                    TiersSorting[4] = !TiersSorting[4];
                     break;
                 case "X":
-                    _tiersSorting[5] = !_tiersSorting[5];
+                    TiersSorting[5] = !TiersSorting[5];
                     break;
                 case "Light":
                     _typesSorting[0] = !_typesSorting[0];
@@ -70,18 +80,20 @@ namespace GénérateurWot
                 case "TD":
                     _typesSorting[3] = !_typesSorting[3];
                     break;
-            }
+            }*/
+            
+            All.IsChecked = !TiersSorting.Any(x => false);
 
             List<Tank> sortedTanks = new List<Tank>();
 
             foreach (var playerTank in Player.Tanks)
             {
-                if ((playerTank.Te != Tier.V || !_tiersSorting[0]) &&
-                    (playerTank.Te != Tier.VI || !_tiersSorting[1]) &&
-                    (playerTank.Te != Tier.VII || !_tiersSorting[2]) &&
-                    (playerTank.Te != Tier.VIII || !_tiersSorting[3]) &&
-                    (playerTank.Te != Tier.IX || !_tiersSorting[4]) &&
-                    (playerTank.Te != Tier.X || !_tiersSorting[5]) ||  
+                if ((playerTank.Te != Tier.V || !TiersSorting[0]) &&
+                    (playerTank.Te != Tier.VI || !TiersSorting[1]) &&
+                    (playerTank.Te != Tier.VII || !TiersSorting[2]) &&
+                    (playerTank.Te != Tier.VIII || !TiersSorting[3]) &&
+                    (playerTank.Te != Tier.IX || !TiersSorting[4]) &&
+                    (playerTank.Te != Tier.X || !TiersSorting[5]) ||  
                     (playerTank.Type != TankType.LIGHT || !_typesSorting[0]) &&
                     (playerTank.Type != TankType.MEDIUM || !_typesSorting[1]) &&
                     (playerTank.Type != TankType.HEAVY || !_typesSorting[2]) &&
@@ -114,6 +126,17 @@ namespace GénérateurWot
         private void Stats_OnExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             new StatsWindow(Player, (Tank)e.Parameter).Show();
+        }
+        
+        private void All_OnChecked(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is CheckBox box)) return;
+            if (box.IsChecked == null) return;
+            
+            for (int i = 0; i < TiersSorting.Count; i++)
+            {
+                TiersSorting[i] = box.IsChecked.Value;
+            }
         }
     }
 }
