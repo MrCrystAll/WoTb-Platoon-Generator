@@ -101,7 +101,7 @@ namespace GénérateurWot
         {
             Debug.WriteLine("Creating players...");
             Players.Add(new Player("nath231", "524090414", "8e5547dd4e3e5b2de0fd45d831a0b951ce163c3b"));
-            Players.Add(new Player("Mathieu1er", "528189939", "dd6939fb1a4d5c66cd40bb16dac4806cdca59e4c"));
+            Players.Add(new Player("Mathieu1er", "528189939", "bd7c03ccc6e1aed03f2f82e25aede880aeb114ce"));
 
             DbPlayer player = new DbPlayer(Players[0]);
             player.WriteToDb();
