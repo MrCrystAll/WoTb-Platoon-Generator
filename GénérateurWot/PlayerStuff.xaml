@@ -22,13 +22,13 @@
             <Button
                 x:Name="Actualize"
                 Click="Actualize_OnClick"
-                Content="Actualiser les chars" 
+                Content="Refresh tanks" 
                 Padding="10,5"
                 Margin="0,0,10,0"/>
             <Button 
                 x:Name="AllTanks"
                 Click="AllTanks_OnClick"
-                Content="Tous les chars"
+                Content="All the tanks"
                 Margin="10,0,0,0"
                 Padding="10,5"/>
         </WrapPanel>
@@ -79,10 +79,10 @@
                     <RadioButton
                         x:Name="Validé"
                         Margin="0,0,10,0"
-                        Content="Validée" />
+                        Content="Done" />
                     <RadioButton
                         x:Name="Raté"
-                        Content="Ratée" />
+                        Content="Failed" />
                 </WrapPanel>
                 <Button
                     x:Name="Bconfirm"

@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:wotGenC="clr-namespace:WotGenC;assembly=WotGenC"
+        xmlns:sys="clr-namespace:System;assembly=System.Core"
         xmlns:local="clr-namespace:GénérateurWot"
         mc:Ignorable="d"
         Title="AllTanks" Height="450" Width="800" d:DataContext="{d:DesignInstance wotGenC:Player}">
@@ -20,7 +21,7 @@
     <StackPanel>
         <TextBlock HorizontalAlignment="Center" Margin="0,30,0,30">
             <TextBlock.Text>
-                <MultiBinding StringFormat="{}Tous les tanks de {0}">
+                <MultiBinding StringFormat="{}All the tanks of {0}">
                     <Binding Path="Pseudo" />
                 </MultiBinding>
             </TextBlock.Text>
@@ -70,27 +71,31 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Tier checkboxes -->
-                <StackPanel HorizontalAlignment="Center" d:DataContext="{d:DesignInstance local:AllTanks}" >
+                <StackPanel HorizontalAlignment="Center" x:Name="Checkboxes" d:DataContext="{d:DesignInstance local:AllTanks}" >
                     <TextBlock Text="Tiers :" Margin="0,0,0,10" />
-                    <CheckBox Content="All" IsChecked="True" x:Name="All" Checked="All_OnChecked" Unchecked="All_OnChecked"
-                              Margin="0,0,0,20" />
-                    <CheckBox Content="V" IsChecked="{Binding TiersSorting[0], Mode=TwoWay }" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                    
+                    <CheckBox Content="All" IsChecked="True" Checked="All_OnChecked" Unchecked="All_OnChecked"
+                              Margin="0,0,0,30" />
+                    
+                    <CheckBox Content="V" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
                               Margin="0,0,0,10" />
-                    <CheckBox Content="VI" IsChecked="{Binding TiersSorting[1], Mode=TwoWay }" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                    <CheckBox Content="VI" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
                               Margin="0,0,0,10" />
-                    <CheckBox Content="VII" IsChecked="{Binding TiersSorting[2], Mode=TwoWay  }" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                    <CheckBox Content="VII" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
                               Margin="0,0,0,10" />
-                    <CheckBox Content="VIII" IsChecked="{Binding TiersSorting[3], Mode=TwoWay  }" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                    <CheckBox Content="VIII" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
                               Margin="0,0,0,10" />
-                    <CheckBox Content="IX" IsChecked="{Binding TiersSorting[4], Mode=TwoWay  }" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                    <CheckBox Content="IX" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
                               Margin="0,0,0,10" />
-                    <CheckBox Content="X" IsChecked="{Binding TiersSorting[5], Mode=TwoWay  }" Checked="Filter_Changed" Unchecked="Filter_Changed"
+                    <CheckBox Content="X" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
                               Margin="0,0,0,10" />
                 </StackPanel>
 
-                <!-- Tier checkboxes -->
-                <StackPanel Grid.Column="1" HorizontalAlignment="Left">
+                <!-- Types checkboxes -->
+                <StackPanel Grid.Column="1" x:Name="CheckboxesTypes" HorizontalAlignment="Left">
                     <TextBlock Text="Types :" Margin="0,0,0,10" />
+                    <CheckBox Content="All" IsChecked="True" Checked="All_types_changed" Unchecked="All_types_changed"
+                              Margin="0,0,0,30" />
                     <CheckBox Content="Light" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"
                               Margin="0,0,0,10" />
                     <CheckBox Content="Medium" IsChecked="True" Checked="Filter_Changed" Unchecked="Filter_Changed"

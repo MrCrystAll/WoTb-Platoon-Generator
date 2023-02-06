@@ -36,88 +36,6 @@ namespace GénérateurWot
             InitializeComponent();
         }
 
-        public StatsWindow(Player joueur)
-        {
-            CurrentPlayer = joueur;
-            Tank = CurrentPlayer.Current;
-            
-            DataContext = CurrentPlayer;
-
-            InitializeComponent();
-            
-            TankNameTier.DataContext = Tank;
-
-
-            //((PieSeries)Chart.Series[1]).ItemsSource = RatioRate;
-
-            KilledTanks.ItemsSource = ListTanksKilled;
-
-            Stream stream = Requester.RequestTankStats(CurrentPlayer.Current, CurrentPlayer);
-            State.Visibility = Visibility.Collapsed;
-
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                string text = reader.ReadToEnd();
-
-                JObject json = JObject.Parse(text);
-
-                JToken playerTank = json["data"][CurrentPlayer.Id][0];
-
-                JObject frags = (JObject)playerTank["frags"];
-                using var enumerator = frags.GetEnumerator();
-                enumerator.MoveNext();
-
-
-                string[] ids = new string[frags.Count];
-
-                for (int i = 0; i < frags.Count; i++)
-                {
-                    ids[i] = enumerator.Current.Key;
-                    enumerator.MoveNext();
-                }
-
-                var tanks = Loader.FindTanksById(ids);
-
-                for (int i = 0; i < frags.Count; i++)
-                {
-                    Debug.WriteLine(tanks[i].Nom);
-                    ListTanksKilled.Add(tanks[i], (uint)frags[ids[i]]);
-                }
-
-                var list = ListTanksKilled.ToList();
-                list.Sort((x, y) => -x.Value.CompareTo(y.Value));
-                ListTanksKilled = list.ToDictionary(x => x.Key, x => x.Value);
-
-                OnPropertyChanged(nameof(ListTanksKilled));
-                KilledTanks.ItemsSource = ListTanksKilled;
-
-                Stats s = new Stats(
-                    int.Parse(CurrentPlayer.Id),
-                    int.Parse(CurrentPlayer.Current.Id),
-                    spotted: (float)playerTank["all"]["spotted"],
-                    hits: (float)playerTank["all"]["hits"],
-                    frags: (float)playerTank["all"]["frags"],
-                    numberOfBattles: (float)playerTank["all"]["battles"],
-                    wins: (float)playerTank["all"]["wins"],
-                    losses: (float)playerTank["all"]["losses"],
-                    maxXp1B: (float)playerTank["all"]["max_xp"],
-                    totalDmgDlt: (float)playerTank["all"]["damage_dealt"],
-                    totalDmgRecvd: (float)playerTank["all"]["damage_received"],
-                    maxFrags1B: (float)playerTank["all"]["max_frags"],
-                    totalShots: (float)playerTank["all"]["shots"],
-                    xp: (float)playerTank["all"]["xp"],
-                    winAndSurvived: (float)playerTank["all"]["win_and_survived"],
-                    survivedBattles: (float)playerTank["all"]["survived_battles"],
-                    droppedCapturePoints: (float)playerTank["all"]["dropped_capture_points"],
-                    killedTanks: ListTanksKilled
-                );
-                
-                FillFieldsWithStat(s);
-            }
-            
-            
-        }
-
         private void FillFieldsWithStat(Stats s)
         {
             RatioRate = new Dictionary<string, float>
@@ -226,10 +144,11 @@ namespace GénérateurWot
             Stream stream = Requester.RequestTankStats(tank, CurrentPlayer);
             State.Visibility = Visibility.Collapsed;
 
-            using (StreamReader reader = new StreamReader(stream))
+            using StreamReader reader = new StreamReader(stream);
+            string text = reader.ReadToEnd();
+            try
             {
-                string text = reader.ReadToEnd();
-
+                RequestVerifyier.CheckResult(text);
                 JObject json = JObject.Parse(text);
 
                 JToken playerTank = json["data"][CurrentPlayer.Id][0];
@@ -282,8 +201,15 @@ namespace GénérateurWot
                     droppedCapturePoints: (float)playerTank["all"]["dropped_capture_points"],
                     killedTanks: ListTanksKilled
                 );
-                
+
                 FillFieldsWithStat(s);
+                Show();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Couldn't open stats :\n" +
+                                $"{e.Message}", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
             }
         }
 

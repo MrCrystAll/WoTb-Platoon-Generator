@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -212,7 +213,12 @@ namespace GénérateurWot
 
         private void Stats_OnClick(object sender, RoutedEventArgs e)
         {
-            new StatsWindow(Joueur).Show();
+            var window = new StatsWindow(Joueur, Joueur.Current);
+            if (!window.IsVisible)
+            {
+                new Thread(() => WaitUntilActivationFailed(e.OriginalSource as Button, "Can't see stats")).Start();
+            }
+            
         }
 
         private void Actualize_OnClick(object sender, RoutedEventArgs e)
@@ -224,36 +230,29 @@ namespace GénérateurWot
             }
             else
             {
-                new Thread(WaitUntilActivationFailed).Start();
+                new Thread(() => WaitUntilActivationFailed(e.OriginalSource as Button, "Request failed")).Start();
             }
             
         }
 
-        private void WaitUntilActivationFailed()
+        private void WaitUntilActivationFailed(Button button, string text)
         {
             string originalText = "";
-            Dispatcher.Invoke(() => originalText = (string)Actualize.Content);
-            Dispatcher.Invoke(() => Actualize.IsEnabled = false);
+            Dispatcher.Invoke(() => originalText = (string)button.Content);
+            Dispatcher.Invoke(() => button.IsEnabled = false);
             
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-
-            while (stopwatch.Elapsed.Seconds < 2)
-            {
-                Dispatcher.Invoke(() => Actualize.Content = "Request failed");
-            }
-            
-            stopwatch.Restart();
             
             while (stopwatch.Elapsed.Seconds < 5)
             {
-                Dispatcher.Invoke(() => Actualize.Content = $"{5 - stopwatch.Elapsed.Seconds}s");
+                Dispatcher.Invoke(() => button.Content = text);
             }
 
             stopwatch.Stop();
             
-            Dispatcher.Invoke(() => Actualize.IsEnabled = true);
-            Dispatcher.Invoke(() => Actualize.Content = originalText);
+            Dispatcher.Invoke(() => button.IsEnabled = true);
+            Dispatcher.Invoke(() => button.Content = originalText);
         }
 
         private void WaitUntilActivation()
@@ -274,6 +273,7 @@ namespace GénérateurWot
             
             Dispatcher.Invoke(() => Actualize.IsEnabled = true);
             Dispatcher.Invoke(() => Actualize.Content = originalText);
+            
         }
 
         private void AllTanks_OnClick(object sender, RoutedEventArgs e)
