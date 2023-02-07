@@ -43,6 +43,11 @@ namespace WotGenC
             //If this is == 0, then it means they are the same
             if (teComparison != 0) return teComparison;
             
+            //Then we compare the type
+            var typeComparison = Type.CompareTo(other.Type);
+
+            if (typeComparison != 0) return typeComparison;
+            
             //Then we compare the name
             var nomComparison = string.Compare(Nom, other.Nom, StringComparison.Ordinal);
             

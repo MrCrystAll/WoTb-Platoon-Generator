@@ -89,20 +89,26 @@ namespace WotGenC
 
     }
 
-    internal static class RequestVerifyier
+    public static class RequestVerifyier
     {
-        internal static bool CheckResult(string response)
+        public static void CheckResult(string response)
         {
 
             string content = response;
             var jObject = JObject.Parse(content);
 
+            string errorMessage = (string)jObject["error"]?["message"];
+            string additionnalInfo = "Unknown problem";
+
+            if (errorMessage == "INVALID_ACCESS_TOKEN")
+            {
+                additionnalInfo = "Try to refresh the access token";
+            }
+
             if ((string)jObject["status"] == "error")
             {
-                Debug.WriteLine(content);
+                throw new Exception($"Error for the request : {errorMessage} ({additionnalInfo})");
             }
-            
-            return (string)jObject["status"] != "error";
         }
     }
 }

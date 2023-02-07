@@ -7,10 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="SharpPcap" Version="6.2.5" />
-    <PackageReference Include="SimpleTCP" Version="1.0.24" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,21 +20,14 @@
 
   <ItemGroup>
     <None Remove="img\bien.jpg" />
-    <Content Include="img\bien.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="img\neutre.jpg" />
-    <Content Include="img\neutre.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="img\op.jpg" />
-    <Content Include="img\op.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="img\sad.jpg" />
-    <Content Include="img\sad.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="icons\down_arrow.png" />
+    <None Remove="icons\right_arrow.png" />
   </ItemGroup>
 
 </Project>

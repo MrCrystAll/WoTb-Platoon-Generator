@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Windows;
 using System.Xml;
 
 namespace WotGenC
@@ -66,29 +67,25 @@ namespace WotGenC
             Debug.Write(message);
 
         }
-        
+
         public static bool LoadTanks(string id, ListOfTanks tanks, Stream stream)
         {
-            
-            if (stream is null) return false;
-            
-            ListOfTanks list = tanks;
-            
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                
-                string json = reader.ReadToEnd();
 
-                if (!RequestVerifyier.CheckResult(json))
-                {
-                    return false;
-                }
-                
+            if (stream is null) return false;
+
+            ListOfTanks list = tanks;
+
+            using StreamReader reader = new StreamReader(stream);
+            string json = reader.ReadToEnd();
+
+            try
+            {
+                RequestVerifyier.CheckResult(json);
+                list.Clear();
                 var p = JObject.Parse(json);
 
                 int i = 0;
 
-                Trace.WriteLine("Nombre de chars détectés : " + p["data"][id].Count());
                 while (i < p["data"][id].Count())
                 {
                     string idt = (string)p["data"][id][i]["tank_id"];
@@ -97,28 +94,33 @@ namespace WotGenC
                         string json2 = reader2.ReadToEnd();
                         var p2 = JObject.Parse(json2);
 
-                        if (p2["data"][idt] != null){
+                        if (p2["data"][idt] != null)
+                        {
                             var nom = (string)p2["data"][idt]["name"];
                             var tier = (int)p2["data"][idt]["tier"];
 
                             TankType type = StringToType((string)p2["data"][idt]["type"]);
-                            
+
                             //Trace.WriteLine($"{idt} => {nom}");
-                            list.Add(new Tank(idt, nom, IntToTier(tier), (string)p2["data"][idt]["images"]["preview"], type));
-                        }
-                        else
-                        {
-                            Trace.WriteLine($"L'id {idt} ne correspond à aucun char");
+                            list.Add(new Tank(idt, nom, IntToTier(tier),
+                                (string)p2["data"][idt]["images"]["preview"], type));
                         }
                     }
+
                     i++;
                 }
-            }
 
-            list.Sort();
-            
-            Saver.SaveBackup( "Backups/" + id + ".xml", list);
-            return true;
+                list.Sort();
+
+                Saver.SaveBackup($"Backups/{id}.xml", list);
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Couldn't open stats :\n" +
+                                $"{e.Message}", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
         }
 
         private static Tier IntToTier(int t)

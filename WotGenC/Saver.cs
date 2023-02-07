@@ -10,10 +10,14 @@ using Newtonsoft.Json;
 
 namespace WotGenC
 {
-    public class Saver
+    public static class Saver
     {
         public static void SaveBackup(string path, ListOfTanks content)
         {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
             using FileStream stream =  new FileStream(path, FileMode.Create);
             DataContractSerializer serializer = new DataContractSerializer(typeof(ListOfTanks));
             serializer.WriteObject(stream, content);

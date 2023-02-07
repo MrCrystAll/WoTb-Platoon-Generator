@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using WotGenC;
 using WotGenC.Challenges;
+using WotGenC.Database;
 using WotGenC.Missions;
 
 namespace GénérateurWot
@@ -25,6 +26,18 @@ namespace GénérateurWot
             {
                 _suppPenalty = value;
                 OnPropertyChanged(nameof(SuppPenalty));
+            }
+        }
+
+        private bool _sameTankTwice;
+
+        public bool SameTankTwice
+        {
+            get => _sameTankTwice;
+            set
+            {
+                _sameTankTwice = value;
+                OnPropertyChanged(nameof(SameTankTwice));
             }
         }
 
@@ -87,11 +100,17 @@ namespace GénérateurWot
         public MainWindow()
         {
             Debug.WriteLine("Creating players...");
-            Players.Add(new Player("nath231", "524090414", "3c4ac24e944e47f2b3584a83c18092ac9263c83b"));
-            Players.Add(new Player("Mathieu1er", "528189939", "dd6939fb1a4d5c66cd40bb16dac4806cdca59e4c"));
+            Players.Add(new Player("nath231", "524090414", "8e5547dd4e3e5b2de0fd45d831a0b951ce163c3b"));
+            Players.Add(new Player("Mathieu1er", "528189939", "bd7c03ccc6e1aed03f2f82e25aede880aeb114ce"));
+
+            DbPlayer player = new DbPlayer(Players[0]);
+            player.WriteToDb();
+            player.Player = Players[1];
+            player.WriteToDb();
             
             Debug.WriteLine("Initializing components");
             InitializeComponent();
+            
             
             Debug.WriteLine("Assigning players");
             J1.Joueur = Players[0];
@@ -104,7 +123,6 @@ namespace GénérateurWot
 
             PlayerStuffs.Add(J1);
             PlayerStuffs.Add(J2);
-
             Loader.LoadBackupsFor(Players);
             CurrentMode = GameMode.Random;
         }
@@ -139,7 +157,9 @@ namespace GénérateurWot
                     case 0:
                         foreach (var player in Players)
                         {
-                            player.Current = TankPicker.PickARandomTank(Tri(WotGenC.Tier.VII, player.Tanks));
+                            var list = Tri(WotGenC.Tier.VII, player.Tanks);
+                            var current = player.Current;
+                            player.Current = TankPicker.PickARandomTank(!(list.Count <= 1) && SameTankTwice ? list.Where(x => x != current).ToList() : list);
                         }
 
                         CurrentTier = WotGenC.Tier.VII;
@@ -147,7 +167,9 @@ namespace GénérateurWot
                     case 1:
                         foreach (var player in Players)
                         {
-                            player.Current = TankPicker.PickARandomTank(Tri(WotGenC.Tier.VIII, player.Tanks));
+                            var list = Tri(WotGenC.Tier.VIII, player.Tanks);
+                            var current = player.Current;
+                            player.Current = TankPicker.PickARandomTank(!(list.Count <= 1) && SameTankTwice ? list.Where(x => x != current).ToList() : list);
                         }
 
                         CurrentTier = WotGenC.Tier.VIII;
@@ -155,7 +177,9 @@ namespace GénérateurWot
                     case 2:
                         foreach (var player in Players)
                         {
-                            player.Current = TankPicker.PickARandomTank(Tri(WotGenC.Tier.IX, player.Tanks));
+                            var list = Tri(WotGenC.Tier.IX, player.Tanks);
+                            var current = player.Current;
+                            player.Current = TankPicker.PickARandomTank(!(list.Count <= 1) && SameTankTwice ? list.Where(x => x != current).ToList() : list);
                         }
 
                         CurrentTier = WotGenC.Tier.IX;
@@ -163,7 +187,9 @@ namespace GénérateurWot
                     case 3:
                         foreach (var player in Players)
                         {
-                            player.Current = TankPicker.PickARandomTank(Tri(WotGenC.Tier.X, player.Tanks));
+                            var list = Tri(WotGenC.Tier.X, player.Tanks);
+                            var current = player.Current;
+                            player.Current = TankPicker.PickARandomTank(!(list.Count <= 1) && SameTankTwice ? list.Where(x => x != current).ToList() : list);
                         }
 
                         CurrentTier = WotGenC.Tier.X;
@@ -175,7 +201,9 @@ namespace GénérateurWot
             {
                 foreach (var player in Players)
                 {
-                    player.Current = TankPicker.PickARandomTank(Tri(CurrentTier, player.Tanks));
+                    var list = Tri(CurrentTier, player.Tanks);
+                    var current = player.Current;
+                    player.Current = TankPicker.PickARandomTank(!(list.Count <= 1) && SameTankTwice ? list.Where(x => x != current).ToList() : list);
                 }
             }
 

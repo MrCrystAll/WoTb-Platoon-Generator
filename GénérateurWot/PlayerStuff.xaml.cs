@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -39,7 +40,18 @@ namespace GénérateurWot
         private void OnPlayerChanged(object sender, PropertyChangedEventArgs e)
         {
             Stats.Visibility = Visibility.Visible;
-            Tank.Text = Joueur.Current?.Nom;
+            
+            if(Joueur.Current is null)
+            {
+                Tank.Text = string.Empty;
+                TankPicture.Source = null;
+            }
+            else
+            {
+                Tank.Text = Joueur.Current.Nom;
+                TankPicture.Source = new BitmapImage(new Uri(Joueur.Current.Image, UriKind.Absolute));
+            }
+
             Challenge.Text = Joueur.Challenge is null 
                 ? string.Empty 
                 : Joueur.Challenge.Intitule;
@@ -80,31 +92,8 @@ namespace GénérateurWot
         public void ModifySelf()
         {
             BrushConverter conv = new BrushConverter();
-            Random r = new Random();
-            
+
             Timers.Items.Refresh();
-
-            int rd1 = (int)Joueur.Current.Type;
-
-            switch (rd1)
-            {
-                case 0:
-                    Tank.Foreground = (Brush)conv.ConvertFromString("Black");
-                    Avis.Source = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "../../../img/sad.jpg")));
-                    break;
-                case 1:
-                    Tank.Foreground = (Brush)conv.ConvertFromString("Red");
-                    Avis.Source = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "../../../img/neutre.jpg")));
-                    break;
-                case 2:
-                    Tank.Foreground = (Brush)conv.ConvertFromString("LightBlue");
-                    Avis.Source = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "../../../img/bien.jpg")));
-                    break;
-                case 3:
-                    Tank.Foreground = (Brush)conv.ConvertFromString("Pink");
-                    Avis.Source = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "../../../img/op.jpg")));
-                    break;
-            }
 
             Miss.Text = Joueur.Mission.Intitule;
             Valid.Visibility = Joueur.Mission.GetType() != typeof(NoMission) ? Visibility.Visible : Visibility.Collapsed;
@@ -224,7 +213,12 @@ namespace GénérateurWot
 
         private void Stats_OnClick(object sender, RoutedEventArgs e)
         {
-            new StatsWindow(Joueur).Show();
+            var window = new StatsWindow(Joueur, Joueur.Current);
+            if (!window.IsVisible)
+            {
+                new Thread(() => WaitUntilActivationFailed(e.OriginalSource as Button, "Can't see stats")).Start();
+            }
+            
         }
 
         private void Actualize_OnClick(object sender, RoutedEventArgs e)
@@ -236,36 +230,29 @@ namespace GénérateurWot
             }
             else
             {
-                new Thread(WaitUntilActivationFailed).Start();
+                new Thread(() => WaitUntilActivationFailed(e.OriginalSource as Button, "Request failed")).Start();
             }
             
         }
 
-        private void WaitUntilActivationFailed()
+        private void WaitUntilActivationFailed(Button button, string text)
         {
             string originalText = "";
-            Dispatcher.Invoke(() => originalText = (string)Actualize.Content);
-            Dispatcher.Invoke(() => Actualize.IsEnabled = false);
+            Dispatcher.Invoke(() => originalText = (string)button.Content);
+            Dispatcher.Invoke(() => button.IsEnabled = false);
             
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-
-            while (stopwatch.Elapsed.Seconds < 2)
-            {
-                Dispatcher.Invoke(() => Actualize.Content = "Request failed");
-            }
-            
-            stopwatch.Restart();
             
             while (stopwatch.Elapsed.Seconds < 5)
             {
-                Dispatcher.Invoke(() => Actualize.Content = $"{5 - stopwatch.Elapsed.Seconds}s");
+                Dispatcher.Invoke(() => button.Content = text);
             }
 
             stopwatch.Stop();
             
-            Dispatcher.Invoke(() => Actualize.IsEnabled = true);
-            Dispatcher.Invoke(() => Actualize.Content = originalText);
+            Dispatcher.Invoke(() => button.IsEnabled = true);
+            Dispatcher.Invoke(() => button.Content = originalText);
         }
 
         private void WaitUntilActivation()
@@ -286,6 +273,14 @@ namespace GénérateurWot
             
             Dispatcher.Invoke(() => Actualize.IsEnabled = true);
             Dispatcher.Invoke(() => Actualize.Content = originalText);
+            
+        }
+
+        private void AllTanks_OnClick(object sender, RoutedEventArgs e)
+        {
+            
+            var allTanks = new AllTanks(Joueur);
+            allTanks.Show();
         }
     }
 }
