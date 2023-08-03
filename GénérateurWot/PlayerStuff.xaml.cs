@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -224,12 +225,14 @@ namespace GénérateurWot
         private void Actualize_OnClick(object sender, RoutedEventArgs e)
         {
             Stream stream = Requester.RequestTanks(Joueur.Id, Joueur.Token);
-            if (Loader.LoadTanks(Joueur.Id, Joueur.Tanks, stream))
+            string exception = Loader.LoadTanks(Joueur.Id, Joueur.Tanks, stream);
+            if (exception == "")
             {
                 new Thread(WaitUntilActivation).Start();
             }
             else
             {
+                MessageBox.Show(exception, "Loading failed!", MessageBoxButton.OK, MessageBoxImage.Error);
                 new Thread(() => WaitUntilActivationFailed(e.OriginalSource as Button, "Request failed")).Start();
             }
             

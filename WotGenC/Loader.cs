@@ -10,6 +10,7 @@ using System.Xml;
 
 namespace WotGenC
 {
+
     public class Loader
     {
 
@@ -68,10 +69,10 @@ namespace WotGenC
 
         }
 
-        public static bool LoadTanks(string id, ListOfTanks tanks, Stream stream)
+        public static string LoadTanks(string id, ListOfTanks tanks, Stream stream)
         {
 
-            if (stream is null) return false;
+            if (stream is null) return "No tanks to load";
 
             ListOfTanks list = tanks;
 
@@ -113,13 +114,11 @@ namespace WotGenC
                 list.Sort();
 
                 Saver.SaveBackup($"Backups/{id}.xml", list);
-                return true;
+                return "";
             }
             catch (Exception e)
             {
-                MessageBox.Show("Couldn't open stats :\n" +
-                                $"{e.Message}", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
+                return e.Message;
             }
         }
 
