@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Windows;
+using System.Xml;
 using WotGenC;
 using WotGenC.Challenges;
 using WotGenC.Database;
@@ -100,8 +103,35 @@ namespace GénérateurWot
         public MainWindow()
         {
             Debug.WriteLine("Creating players...");
-            Players.Add(new Player("nath231", "524090414", "8e5547dd4e3e5b2de0fd45d831a0b951ce163c3b"));
-            Players.Add(new Player("Mathieu1er", "528189939", "bd7c03ccc6e1aed03f2f82e25aede880aeb114ce"));
+
+            Player[] players = new Player[]
+            {
+                new Player("nath231", "524090414", "8e5547dd4e3e5b2de0fd45d831a0b951ce163c3b"),
+                new Player("Mathieu1er", "528189939", "bd7c03ccc6e1aed03f2f82e25aede880aeb114ce")
+            };
+            foreach (var p in players)
+            {
+                try
+                {
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(Player));
+                    using FileStream fs = new FileStream(p.Id + "_save.xml", FileMode.Open);
+                    XmlDictionaryReader reader =
+                        XmlDictionaryReader.CreateTextReader(fs, new XmlDictionaryReaderQuotas());
+                    Player pLoaded = (Player)serializer.ReadObject(reader);
+
+                    Player pToAdd = new Player(pLoaded.Pseudo, pLoaded.Id, pLoaded.Token);
+
+                    reader.Close();
+                    fs.Close();
+
+                    Players.Add(pToAdd);
+                }
+                catch (IOException e)
+                {
+                    Players.Add(p);
+                }
+            }
+            
 
             DbPlayer player = new DbPlayer(Players[0]);
             player.WriteToDb();

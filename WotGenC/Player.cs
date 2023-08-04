@@ -3,18 +3,26 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using WotGenC.Challenges;
 using WotGenC.Missions;
 
 namespace WotGenC
 {
+    [DataContract]
     public class Player : INotifyPropertyChanged
     {
+        
+        [DataMember]
         public string Token { get; set; }
+        
+        [DataMember]
         public string Pseudo { get; set; }
         
+        [DataMember]
         public string Id { get; set; }
         public AllTimers Timers { get; set; } = new AllTimers();
+        
         public ListOfTanks Tanks { get; set; } = new ListOfTanks();
 
         private int _cpt;

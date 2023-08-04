@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WotGenC;
 using WotGenC.Challenges;
+using WotGenC.Errors;
 using WotGenC.Missions;
 using DependencyProperty = System.Windows.DependencyProperty;
 using PropertyMetadata = System.Windows.PropertyMetadata;
@@ -225,14 +226,18 @@ namespace GénérateurWot
         private void Actualize_OnClick(object sender, RoutedEventArgs e)
         {
             Stream stream = Requester.RequestTanks(Joueur.Id, Joueur.Token);
-            string exception = Loader.LoadTanks(Joueur.Id, Joueur.Tanks, stream);
-            if (exception == "")
+            Exception? exception = Loader.LoadTanks(Joueur.Id, Joueur.Tanks, stream);
+            if (exception is null)
             {
                 new Thread(WaitUntilActivation).Start();
             }
             else
             {
-                MessageBox.Show(exception, "Loading failed!", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (exception is AccessTokenDenied)
+                {
+                    MessageBox.Show(exception.Message, "Loading failed!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    new AccessTokenInsertion(Joueur).ShowDialog();
+                }
                 new Thread(() => WaitUntilActivationFailed(e.OriginalSource as Button, "Request failed")).Start();
             }
             
@@ -284,6 +289,11 @@ namespace GénérateurWot
             
             var allTanks = new AllTanks(Joueur);
             allTanks.Show();
+        }
+
+        private void RefreshToken(object sender, RoutedEventArgs e)
+        {
+            new AccessTokenInsertion(Joueur).ShowDialog();
         }
     }
 }

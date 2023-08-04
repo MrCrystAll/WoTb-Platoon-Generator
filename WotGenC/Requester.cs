@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows;
 using Windows.UI.Popups;
 using Newtonsoft.Json.Linq;
+using WotGenC.Errors;
 
 namespace WotGenC
 {
@@ -102,7 +103,7 @@ namespace WotGenC
 
             if (errorMessage == "INVALID_ACCESS_TOKEN")
             {
-                additionnalInfo = "Try to refresh the access token";
+                throw new AccessTokenDenied();
             }
 
             if ((string)jObject["status"] == "error")

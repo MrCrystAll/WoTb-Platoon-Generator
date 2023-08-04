@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:GénérateurWot"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Génération"
-    Width="900"
+    Width="1000"
     Height="700"
     Loaded="Window_Loaded"
     ResizeMode="CanMinimize"
@@ -16,7 +16,7 @@
         <StaticResource ResourceKey="Background"/>
     </Window.Background>
 
-    <StackPanel Width="800" HorizontalAlignment="Center" d:DataContext="{d:DesignInstance local:MainWindow }">
+    <StackPanel d:DataContext="{d:DesignInstance local:MainWindow }" Margin="20">
         <Grid Height="100" Margin="0,10,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.2*"/>
@@ -62,18 +62,16 @@
         
         
         <StackPanel>
-            <Grid HorizontalAlignment="Center" Width="820">
+            <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.1*"/>
                     <ColumnDefinition Width="0.4*"/>
                     <ColumnDefinition Width="0.2*"/>
                     <ColumnDefinition Width="0.4*"/>
-                    <ColumnDefinition Width="0.1*"/>
                 </Grid.ColumnDefinitions>
                 <local:PlayerStuff Joueur="{Binding Path=Players[0]}" x:Name="J1"
-                                   d:DataContext="{d:DesignInstance local:MainWindow}" Grid.Column="1" />
+                                   d:DataContext="{d:DesignInstance local:MainWindow}"/>
                 <local:PlayerStuff Joueur="{Binding Path=Players[1]}" x:Name="J2"
-                                   d:DataContext="{d:DesignInstance local:MainWindow}" Grid.Column="3" />
+                                   d:DataContext="{d:DesignInstance local:MainWindow}" Grid.Column="2" />
             </Grid>
             <!--<TextBlock
                 Margin="0,50,0,0"

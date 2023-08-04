@@ -7,6 +7,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Xml;
+using JetBrains.Annotations;
+using WotGenC.Errors;
 
 namespace WotGenC
 {
@@ -69,10 +71,11 @@ namespace WotGenC
 
         }
 
-        public static string LoadTanks(string id, ListOfTanks tanks, Stream stream)
+        [CanBeNull]
+        public static Exception LoadTanks(string id, ListOfTanks tanks, Stream stream)
         {
 
-            if (stream is null) return "No tanks to load";
+            if (stream is null) return new Exception("No tanks to load");
 
             ListOfTanks list = tanks;
 
@@ -114,11 +117,11 @@ namespace WotGenC
                 list.Sort();
 
                 Saver.SaveBackup($"Backups/{id}.xml", list);
-                return "";
+                return null;
             }
             catch (Exception e)
             {
-                return e.Message;
+                return e;
             }
         }
 
